@@ -1,0 +1,64 @@
+import pygame
+import random
+import math
+import time
+
+pygame.init()
+angle = 0
+accel=0
+
+velocity=0
+velocity_x =0
+velocity_y =0
+pos_x= 200
+pos_y= 200
+angle_inc=0
+
+car = pygame.image.load("car.png")
+car = pygame.transform.scale(car,(80,35))
+
+# screen
+screen = pygame.display.set_mode((1366, 710))
+
+running = True
+while running:
+    # Background
+    screen.fill((99, 0, 76))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        #movement
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                accel=.001
+            if event.key == pygame.K_LEFT:
+                angle_inc=math.pi/1000
+
+            if event.key == pygame.K_RIGHT:
+                angle_inc=-math.pi/1000
+            if event.key == pygame.K_DOWN:
+                accel=-.001
+
+
+
+        if  event.type == pygame.KEYUP:
+            if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                accel = 0
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                angle_inc=0
+
+    #physics
+    velocity += accel
+    velocity_y = -velocity*math.sin(angle)
+    velocity_x = velocity * math.cos(angle)
+    pos_x +=velocity_x
+    pos_y += velocity_y
+    angle += angle_inc
+
+
+
+
+
+    print(math.radians(angle))
+    screen.blit(pygame.transform.rotate(car, math.degrees(angle)), (pos_x, pos_y))
+    pygame.display.update()
